@@ -34,7 +34,6 @@ class ApiException(HTTPException):
                 'error_code': self.error_code,
                 'msg': self.msg,
                 'path': request.full_path,
-                'description': super().get_description(environ)
             }
         }
         return json.dumps(body)
