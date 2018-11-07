@@ -1,10 +1,12 @@
 # coding:utf-8
 import os
-
+import werkzeug
+import json
+from config import config
 from flask import (Flask, g)
 
 
-def create_app(test_config=None):
+def create_app(test_config=config):
     '''flask工厂函数'''
     app = Flask(__name__, instance_relative_config=True)
     # app配置
@@ -30,3 +32,5 @@ def config_app(app, test_config=None):
         app.config.from_pyfile('config.py', silent=True)
     else:
         app.config.from_mapping(test_config)
+
+
