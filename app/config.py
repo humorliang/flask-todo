@@ -4,5 +4,6 @@ config = {
     "USER_NAME": 'root',
     # mac
     "PASSWORD": 'qQwer@@1234',
-    "DATABASE_NAME": 'android_app'
+    "DATABASE_NAME": 'android_app',
+    "DEBUG":True
 }

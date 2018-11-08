@@ -27,4 +27,4 @@ def close_db():
 
 
 if __name__ == '__main__':
-    pass
+    get_db()

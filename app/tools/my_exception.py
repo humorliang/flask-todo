@@ -11,16 +11,13 @@ class ApiException(HTTPException):
     error：错误编码
     '''
     code = 500
-    msg = '未知错误'
-    error_code = 50001
+    msg = '服务器错误'
 
     def __init__(self, code=None, msg=None, error_code=None, header=None):
         if code:
             self.code = code
         if msg:
             self.msg = msg
-        if error_code:
-            self.error_code = error_code
         # 继承HttpException然后再重构 HttpException 构造函数参数：description=None, response=None
         super().__init__(msg, None)
 
@@ -31,7 +28,6 @@ class ApiException(HTTPException):
             'success': False,
             'data': {
                 'code': self.code,
-                'error_code': self.error_code,
                 'msg': self.msg,
                 'path': request.full_path,
             }
