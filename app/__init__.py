@@ -75,15 +75,25 @@ def request_handler(app):
         '''返回统一的数据格式
         :return dict类型参数
         '''
-        request._dict = None
-        if request.form:
-            # print('form', request.form)
-            request._dict = dict(request.form)
-        elif request.get_json():
-            # print('json', request.get_json())
-            request._dict = dict(request.get_json())
-        elif request.values:
-            # print('values', request.values)
-            request._dict = dict(request.values)
+        if request.method == 'POST':
+            request._dict = None
+            if request.form:
+                # print('form', request.form)
+                request._dict = dict(request.form)
+            elif request.get_json():
+                # print('json', request.get_json())
+                request._dict = dict(request.get_json())
+            elif request.values:
+                # print('values', request.values)
+                request._dict = dict(request.values)
+            else:
+                abort(400, {'success': False, 'data': '请求有误！请求的数据为form或json类型数据不能为空！'})
         else:
-            abort(400, {'success': False, 'data': '请求有误！请求的数据为form或json类型数据不能为空！'})
+            pass
+
+    @app.before_request
+    def ip_filter():
+        '''过滤IP地址'''
+        # IP = request.remote_addr
+        # print(IP) # 获取客户端的IP，需要设置web服务器不然就只是127.0.0.1
+        pass

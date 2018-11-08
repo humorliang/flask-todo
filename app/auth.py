@@ -16,17 +16,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     if request.method == 'POST':
         info = {}
-        # 表单数据
-        # if request.form:
-        #
-        #     info = {'success': True, 'data': request.form}
-        # # 对请求头信息进行判断
-        # elif request.get_json():
-        #     info = {'success': True, 'data': request.get_json()}
-        # else:
-        #     info = {'success': False, 'data': '请求数据类型格式有误！请使用form或json格式'}
-        data = request._dict
-        info = {"success": True, 'data': data}
+
+        info = {"success": True, 'data': ''}
         return json.dumps(info)
     else:
         return json.dumps({'msg': 0, 'data': '请使用post请求'})
