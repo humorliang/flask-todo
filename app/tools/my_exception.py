@@ -11,7 +11,7 @@ class ApiException(HTTPException):
     error：错误编码
     '''
     code = 500
-    msg = '服务器错误'
+    msg = '服务器异常'
 
     def __init__(self, code=None, msg=None, error_code=None, header=None):
         if code:
@@ -38,3 +38,4 @@ class ApiException(HTTPException):
     def get_headers(self, environ=None):
         """Get a list of headers."""
         return [('Content-Type', 'application/json')]
+

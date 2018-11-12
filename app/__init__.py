@@ -1,10 +1,10 @@
 # coding:utf-8
-import os
-import werkzeug
-import json
+import re
+
+from pymysql import DataError
 from config import config
 from flask import (Flask, request, abort)
-from tools.my_exception import ApiException, HTTPException
+from tools.my_exception import (ApiException, HTTPException)
 
 
 def create_app(test_config=config):
@@ -44,7 +44,7 @@ def error_handler(app):
 
     # 注册全局异常错误
     @app.errorhandler(Exception)
-    def error_500(e):
+    def error_or_except(e):
         # api 异常
         if isinstance(e, ApiException):
             print('api except')
@@ -57,12 +57,21 @@ def error_handler(app):
             return ApiException(code=code, msg=msg)
         # Exception异常
         elif isinstance(e, Exception):
-            code = '500'
-            msg = e.__repr__()
-            print('exception')
-            return ApiException(code=code, msg=msg)
+            if isinstance(e, DataError):
+                code = 500
+                # 将异常的信息传递给msg
+                msg = e.__repr__()
+                print('db exception')
+                return ApiException(code=code, msg=msg)
+            else:
+                code = 500
+                # 将异常的信息传递给msg
+                msg = e.__repr__()
+                print('exception')
+                return ApiException(code=code, msg=msg)
         else:
             if not app.config['DEBUG']:
+                print('debug')
                 return ApiException()
             raise e
 
@@ -76,10 +85,12 @@ def request_handler(app):
         :return dict类型参数
         '''
         if request.method == 'POST':
-            request._dict = None
+            request._dict = {}
             if request.form:
-                # print('form', request.form)
-                request._dict = dict(request.form)
+                for key, value in dict(request.form).items():
+                    # re.sub('正则'，'替换符'，被匹配字符)  XML 乱码 过滤 post
+                    request._dict[key] = re.sub(r"[\x00-\x08\x0b-\x0c\x0e-\x1f]+", "", str(value[0]))
+                print(request._dict)
             elif request.get_json():
                 # print('json', request.get_json())
                 request._dict = dict(request.get_json())

@@ -26,5 +26,10 @@ def close_db():
         db.close()
 
 
+# 处理字符串转义
+def str_escape(_str):
+    return pymysql.escape_string(_str)
+
+
 if __name__ == '__main__':
-    get_db()
+    print(str_escape('adsd'))
